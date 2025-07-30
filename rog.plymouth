@@ -1,0 +1,9 @@
+[Plymouth Theme]
+Name=ROG
+Description=Republic of Gamers Plymouth Theme
+Comment=created By esriee 
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/rog
+ScriptFile=/usr/share/plymouth/themes/rog/rog.script

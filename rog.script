@@ -1,0 +1,116 @@
+screen_width = Window.GetWidth();
+screen_height = Window.GetHeight();
+
+logo.original_image = Image("rog_logo.png");
+
+logo_scale_factor = 0.4; 
+logo_width = logo.original_image.GetWidth() * logo_scale_factor;
+logo_height = logo.original_image.GetHeight() * logo_scale_factor;
+
+logo.image = logo.original_image.Scale(logo_width, logo_height);
+logo.sprite = Sprite(logo.image);
+
+logo.x = (screen_width - logo_width) / 2;
+logo.y = (screen_height - logo_height) / 2;
+logo.sprite.SetPosition(logo.x, logo.y, 0);
+
+progress_bar.image = Image.Text("", 0.8, 0.8, 0.8);
+progress_bar.sprite = Sprite(progress_bar.image);
+progress_bar.x = screen_width / 2 - 150;
+progress_bar.y = screen_height * 0.75;
+progress_bar.sprite.SetPosition(progress_bar.x, progress_bar.y, 1);
+
+fun progress_callback(duration, progress) {
+    bar_width = 300;
+    bar_height = 6;
+    
+    bar_bg = Image(bar_width, bar_height);
+    bar_bg = bar_bg.Scale(bar_width, bar_height);
+    for (i = 0; i < bar_width; i++) {
+        for (j = 0; j < bar_height; j++) {
+            bar_bg.SetPixel(i, j, 0.2, 0.2, 0.2, 1);
+        }
+    }
+    
+    fill_width = progress * bar_width;
+    for (i = 0; i < fill_width; i++) {
+        for (j = 0; j < bar_height; j++) {
+            bar_bg.SetPixel(i, j, 1, 0.3, 0.3, 1); 
+        }
+    }
+    
+    progress_bar.sprite.SetImage(bar_bg);
+}
+
+Plymouth.SetBootProgressFunction(progress_callback);
+
+
+# Password dialog (for disk encryption prompts)
+# The dialog-box.png file is optional - if it doesn't exist, a simple black box is created
+
+fun dialog_setup() {
+    local.box;
+    local.lock;
+    local.entry;
+    
+    box.image = Image("dialog-box.png");
+    if (!box.image) {
+        box.image = Image(400, 100);
+        box.image = box.image.Scale(400, 100);
+        for (i = 0; i < 400; i++) {
+            for (j = 0; j < 100; j++) {
+                box.image.SetPixel(i, j, 0, 0, 0, 0.8);
+            }
+        }
+    }
+    
+    box.sprite = Sprite(box.image);
+    box.x = screen_width / 2 - box.image.GetWidth() / 2;
+    box.y = screen_height / 2 - box.image.GetHeight() / 2 + 50;
+    box.sprite.SetPosition(box.x, box.y, 10000);
+    
+    entry.image = Image.Text("", 1, 1, 1);
+    entry.sprite = Sprite(entry.image);
+    entry.sprite.SetPosition(box.x + 20, box.y + 30, 10001);
+    
+    global.dialog.box = box;
+    global.dialog.entry = entry;
+    global.dialog.bullet_image = Image.Text("•", 1, 1, 1);
+}
+
+fun dialog_opacity(opacity) {
+    dialog.box.sprite.SetOpacity(opacity);
+    dialog.entry.sprite.SetOpacity(opacity);
+}
+
+fun display_normal_callback() {
+    global.status = "normal";
+    dialog_opacity(0);
+}
+
+fun display_password_callback(prompt, bullets) {
+    global.status = "password";
+    if (!global.dialog) dialog_setup();
+    
+    dialog_opacity(1);
+    bullet_string = "";
+    for (i = 0; i < bullets; i++) {
+        bullet_string += "•";
+    }
+    
+    dialog.entry.image = Image.Text(bullet_string, 1, 1, 1);
+    dialog.entry.sprite.SetImage(dialog.entry.image);
+}
+
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+
+message_sprite = Sprite();
+message_sprite.SetPosition(10, 10, 10000);
+
+fun message_callback(text) {
+    my_image = Image.Text(text, 1, 1, 1);
+    message_sprite.SetImage(my_image);
+}
+
+Plymouth.SetMessageFunction(message_callback);
