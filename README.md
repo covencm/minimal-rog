@@ -1,6 +1,6 @@
 ## How to use this theme 
 
-+ For Ubuntu based distros
++ For debian based distros
 
 ```bash
 
@@ -18,7 +18,7 @@ sudo update-initramfs -u
 
 ```
 
-+ For Arch based distros 
++ For arch based distros 
 
 ```bash
 
