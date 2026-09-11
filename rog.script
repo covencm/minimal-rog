@@ -45,7 +45,7 @@ fun progress_callback(duration, progress) {
 Plymouth.SetBootProgressFunction(progress_callback);
 
 
-# Password dialog (for disk encryption prompts)
+# for disk encryption prompts
 # The dialog-box.png file is optional - if it doesn't exist, a simple black box is created
 
 fun dialog_setup() {
